@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import org.apache.catalina.connector.Connector;
+import org.apache.catalina.core.AprLifecycleListener;
+import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
 
 public class MySpringBootApplication {
@@ -20,6 +22,11 @@ public class MySpringBootApplication {
 		tomcat.getEngine();
 		tomcat.setConnector(connector);
 		tomcat.getHost().setAutoDeploy(false);
+		StandardContext myCtx = (StandardContext) tomcat
+	            .addWebapp("/access", System.getProperty("user.dir") + File.separator + "src/main");
+		 myCtx.setReloadable(false);
+	        // 上下文监听器
+	        myCtx.addLifecycleListener(new AprLifecycleListener());
 		tomcat.start();
 		tomcat.getServer().await();
 	}
